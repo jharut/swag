@@ -1,4 +1,4 @@
-import { test, expect } from '../../fixtures/test.js';
+import { test, expect } from '../../fixtures/base.test.js';
 import { users } from '../../data/users.js';
 
 test.beforeEach(async ({ loginPage }) => {

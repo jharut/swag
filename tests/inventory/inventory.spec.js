@@ -1,5 +1,6 @@
-import { test, expect } from '../../fixtures/test.js';
+import { test, expect } from '../../fixtures/base.test.js';
 import { expectedProductNames, products } from '../../data/products.js';
+import { sortNumbersAscending, sortNumbersDescending, sortTextAscending } from '../../utils/sorting.js';
 
 test('TC-04. Product name list', async ({ authenticatedInventory }) => {
   await test.step('Verify all six product names in the default order', async () => {
@@ -16,14 +17,14 @@ test('TC-06. Sort product prices low to high and high to low', async ({ authenti
     await authenticatedInventory.sortByPriceAscending();
     await expect.poll(() => authenticatedInventory.getPrices()).toEqual(expectedPrices);
     const prices = await authenticatedInventory.getPrices();
-    expect(prices).toEqual([...prices].sort((a, b) => a - b));
+    expect(prices).toEqual(sortNumbersAscending(prices));
   });
 
   await test.step('Verify prices sorted from high to low', async () => {
     await authenticatedInventory.sortByPriceDescending();
     await expect.poll(() => authenticatedInventory.getPrices()).toEqual([...expectedPrices].reverse());
     const prices = await authenticatedInventory.getPrices();
-    expect(prices).toEqual([...prices].sort((a, b) => b - a));
+    expect(prices).toEqual(sortNumbersDescending(prices));
   });
 });
 
@@ -32,7 +33,7 @@ test('TC-05. Sort product names A to Z and Z to A', async ({ authenticatedInvent
   const originalNames = await authenticatedInventory.productNames.allTextContents();
 
   await test.step('Verify product names are sorted A to Z by default', async () => {
-    const ascendingNames = [...originalNames].sort((a, b) => a.localeCompare(b));
+    const ascendingNames = sortTextAscending(originalNames);
     expect(originalNames).toEqual(ascendingNames);
   });
 

@@ -1,13 +1,13 @@
-export class InventoryPage {
+import { BasePage } from './base.page.js';
+import { parseUsdToCents } from '../utils/currency.js';
+
+export class InventoryPage extends BasePage {
   constructor(page) {
-    this.page = page;
-    this.title = page.getByTestId('title');
+    super(page);
     this.items = page.getByTestId('inventory-item');
     this.productNames = page.getByTestId('inventory-item-name');
     this.productPrices = page.getByTestId('inventory-item-price');
     this.sortDropdown = page.getByTestId('product-sort-container');
-    this.cartLink = page.getByTestId('shopping-cart-link');
-    this.cartBadge = page.getByTestId('shopping-cart-badge');
   }
 
   getProductCard(name) {
@@ -27,10 +27,6 @@ export class InventoryPage {
     }
   }
 
-  async openCart() {
-    await this.cartLink.click();
-  }
-
   async sortByNameDescending() {
     await this.sortDropdown.selectOption({ label: 'Name (Z to A)' });
   }
@@ -45,6 +41,6 @@ export class InventoryPage {
 
   async getPrices() {
     const prices = await this.productPrices.allTextContents();
-    return prices.map((price) => Number(price.trim().replace(/^\$/, '')));
+    return prices.map((price) => parseUsdToCents(price) / 100);
   }
 }

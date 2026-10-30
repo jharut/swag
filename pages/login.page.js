@@ -1,11 +1,11 @@
-export class LoginPage {
+import { BasePage } from './base.page.js';
+
+export class LoginPage extends BasePage {
   constructor(page) {
-    this.page = page;
+    super(page);
     this.username = page.getByTestId('username');
     this.password = page.getByTestId('password');
     this.loginButton = page.getByTestId('login-button');
-    this.errorMessage = page.getByTestId('error');
-    this.errorButton = page.getByTestId('error-button');
   }
 
   async goto() {
@@ -16,9 +16,5 @@ export class LoginPage {
     await this.username.fill(username);
     await this.password.fill(password);
     await this.loginButton.click();
-  }
-
-  async dismissError() {
-    await this.errorButton.click();
   }
 }

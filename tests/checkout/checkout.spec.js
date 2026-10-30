@@ -1,5 +1,6 @@
-import { test, expect } from '../../fixtures/test.js';
+import { test, expect } from '../../fixtures/base.test.js';
 import { products } from '../../data/products.js';
+import { parseUsdToCents, formatUsd } from '../../utils/currency.js';
 
 test('TC-11. Calculate checkout subtotal, tax, and total', async ({ authenticatedInventory, cartPage, checkoutPage }) => {
   await test.step('Add three products and continue to checkout overview', async () => {
@@ -20,22 +21,17 @@ test('TC-11. Calculate checkout subtotal, tax, and total', async ({ authenticate
     await expect(checkoutPage.productPrices).toHaveCount(3);
     const priceTexts = await checkoutPage.productPrices.allTextContents();
     // Sum integer cents to avoid floating-point rounding errors.
-    const subtotalCents = priceTexts.reduce((sum, text) => {
-      const price = Number(text.trim().replace(/^\$/, ''));
-      expect(Number.isFinite(price)).toBe(true);
-      return sum + Math.round(price * 100);
-    }, 0);
+    const subtotalCents = priceTexts.reduce((sum, text) => sum + parseUsdToCents(text), 0);
 
-    await expect(checkoutPage.subtotalLabel).toHaveText(`Item total: $${(subtotalCents / 100).toFixed(2)}`);
+    await expect(checkoutPage.subtotalLabel).toHaveText(`Item total: ${formatUsd(subtotalCents)}`);
 
     const expectedTaxCents = Math.round(subtotalCents * 0.08);
-    await expect(checkoutPage.taxLabel).toHaveText(`Tax: $${(expectedTaxCents / 100).toFixed(2)}`);
+    await expect(checkoutPage.taxLabel).toHaveText(`Tax: ${formatUsd(expectedTaxCents)}`);
 
     // Read the displayed tax so the total check verifies subtotal + actual tax.
     const taxText = await checkoutPage.taxLabel.innerText();
-    const taxCents = Math.round(Number(taxText.replace('Tax: $', '').trim()) * 100);
-    const total = (subtotalCents + taxCents) / 100;
-    await expect(checkoutPage.totalLabel).toHaveText(`Total: $${total.toFixed(2)}`);
+    const taxCents = parseUsdToCents(taxText);
+    await expect(checkoutPage.totalLabel).toHaveText(`Total: ${formatUsd(subtotalCents + taxCents)}`);
   });
 });
 

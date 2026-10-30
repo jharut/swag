@@ -1,11 +1,11 @@
-export class CartPage {
+import { BasePage } from './base.page.js';
+
+export class CartPage extends BasePage {
   constructor(page) {
-    this.page = page;
-    this.title = page.getByTestId('title');
+    super(page);
     this.cartList = page.getByTestId('cart-list');
     this.items = this.cartList.getByTestId('inventory-item');
     this.productNames = this.cartList.getByTestId('inventory-item-name');
-    this.cartBadge = page.getByTestId('shopping-cart-badge');
     this.removeBackpackButton = this.cartList.getByTestId('remove-sauce-labs-backpack');
     this.checkoutButton = page.getByTestId('checkout');
   }

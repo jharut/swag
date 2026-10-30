@@ -1,5 +1,6 @@
-import { test, expect } from '../../fixtures/test.js';
+import { test, expect } from '../../fixtures/base.test.js';
 import { products } from '../../data/products.js';
+import { sortTextAscending } from '../../utils/sorting.js';
 
 test('user can add a product to the cart @smoke', async ({ authenticatedInventory, cartPage }) => {
   await authenticatedInventory.addProduct(products.backpack);
@@ -25,8 +26,8 @@ test('TC-09. Cart contains the added products with quantity one', async ({ authe
     await expect(cartPage.items).toHaveCount(3);
     await expect.poll(async () => {
       const names = await cartPage.productNames.allTextContents();
-      return names.sort();
-    }).toEqual([...addedProducts].sort());
+      return sortTextAscending(names);
+    }).toEqual(sortTextAscending(addedProducts));
   });
 
   await test.step('Verify quantity one for every cart item', async () => {

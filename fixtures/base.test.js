@@ -5,6 +5,8 @@ import { CartPage } from '../pages/cart.page.js';
 import { CheckoutPage } from '../pages/checkout.page.js';
 import { users } from '../data/users.js';
 
+// Shared test foundation: fixtures are created only when requested by a test.
+// Each test keeps Playwright's isolated browser context and page.
 export const test = base.extend({
   loginPage: async ({ page }, use) => {
     await use(new LoginPage(page));

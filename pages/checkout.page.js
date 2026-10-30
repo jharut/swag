@@ -1,19 +1,18 @@
-export class CheckoutPage {
+import { BasePage } from './base.page.js';
+
+export class CheckoutPage extends BasePage {
   constructor(page) {
-    this.page = page;
-    this.title = page.getByTestId('title');
+    super(page);
     this.firstName = page.getByTestId('firstName');
     this.lastName = page.getByTestId('lastName');
     this.postalCode = page.getByTestId('postalCode');
     this.continueButton = page.getByTestId('continue');
-    this.errorMessage = page.getByTestId('error');
     this.productPrices = page.getByTestId('inventory-item-price');
     this.subtotalLabel = page.getByTestId('subtotal-label');
     this.taxLabel = page.getByTestId('tax-label');
     this.totalLabel = page.getByTestId('total-label');
     this.finishButton = page.getByTestId('finish');
     this.completeHeader = page.getByTestId('complete-header');
-    this.cartBadge = page.getByTestId('shopping-cart-badge');
     this.backToProductsButton = page.getByTestId('back-to-products');
   }
 

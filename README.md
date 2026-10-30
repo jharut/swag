@@ -6,8 +6,9 @@ JavaScript end-to-end tests for https://www.saucedemo.com using page objects and
 
 ```text
 ├── data/                    # Accounts and product data
-├── fixtures/test.js         # Page objects and authenticated setup
+├── fixtures/base.test.js    # Shared test foundation and authenticated setup
 ├── pages/                   # Locators and reusable UI actions
+├── utils/                   # USD parsing/formatting and array sorting helpers
 ├── tests/
 │   ├── auth/login.spec.js   # Successful and rejected login
 │   └── cart/cart.spec.js    # Add-to-cart scenario
@@ -57,8 +58,8 @@ Environment variables are read directly from the process; `.env` files are not l
 
 ## Adding coverage
 
-1. Add page-specific locators and actions to `pages/`.
-2. Expose a new page object in `fixtures/test.js` when needed.
+1. Add page-specific locators and actions to `pages/`. Page objects extend `BasePage` and call `super(page)` to reuse the page reference, title, cart link and badge, error locators, and shared `openCart()` / `dismissError()` actions from `pages/base.page.js`.
+2. Expose a new page object in `fixtures/base.test.js` when needed. Import `test` and `expect` from this base test in every spec. Playwright fixtures provide shared setup instead of test-class inheritance; `authenticatedInventory` logs in only for tests that request it.
 3. Add independent scenarios under `tests/<feature>/`, importing `test` and `expect` from the custom fixture.
 4. Use Playwright locator assertions and automatic waiting. Avoid fixed sleeps and dependencies on test execution order.
 
