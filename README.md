@@ -11,13 +11,34 @@ JavaScript end-to-end tests for https://www.saucedemo.com using page objects and
 ├── utils/                   # USD parsing/formatting and array sorting helpers
 ├── tests/
 │   ├── auth/login.spec.js   # Successful and rejected login
-│   └── cart/cart.spec.js    # Add-to-cart scenario
+│   ├── inventory/inventory.spec.js # Product lists, sorting, and adding items
+│   ├── cart/cart.spec.js    # Cart contents and removal
+│   └── checkout/checkout.spec.js # Totals, validation, and completed orders
 ├── playwright.config.js    # Browsers, retries, reporting, artifacts
 ├── package.json            # Dependencies and commands
 └── package-lock.json       # Exact dependency versions after installation
 ```
 
 Tests describe business scenarios and own their assertions. Page objects own locators and UI actions. Fixtures construct page objects and prepare an isolated authenticated session when requested. Data files hold reusable inputs. Each test receives a fresh browser context; tests can run independently and in parallel.
+
+## Test scenarios
+
+- **TC-01:** Successful login.
+- **TC-02:** Locked-out user error.
+- **TC-03:** Login validation and error dismissal (3 cases).
+- **TC-04:** Exact list of six product names.
+- **TC-05:** Product name sorting A–Z and Z–A.
+- **TC-06:** Price sorting low–high and high–low.
+- **TC-07:** Find a product card by name, check its price, and add it.
+- **TC-08:** Add all six products in a loop.
+- **TC-09:** Cart contains the selected products, each with quantity one.
+- **TC-10:** Remove products and verify the empty-cart badge disappears.
+- **TC-11:** Calculate and verify checkout subtotal, tax, and total.
+- **TC-12:** Checkout required-field validation (3 cases).
+- **TC-13:** Complete an order and return to the catalog.
+- **Smoke:** Add one product and verify it in the cart.
+
+18 tests per browser; 54 runs across Chromium, Firefox, and WebKit.
 
 ## Setup
 
